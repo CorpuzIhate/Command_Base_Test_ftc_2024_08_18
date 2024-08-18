@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -23,10 +24,11 @@ public class RobotContainer extends OpMode {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry main_dashboardTelemetry = dashboard.getTelemetry();
 
-
+    GamepadEx driverOp;
 
 
     public void init(){
+        driverOp = new GamepadEx(gamepad1);
         mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickCMD(mecanumDriveBaseSub,main_dashboardTelemetry));
     }
 
