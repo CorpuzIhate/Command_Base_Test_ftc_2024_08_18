@@ -24,11 +24,10 @@ public class RobotContainer extends OpMode {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry main_dashboardTelemetry = dashboard.getTelemetry();
 
-    GamepadEx driverOp;
 
 
     public void init(){
-        driverOp = new GamepadEx(gamepad1);
+
         mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickCMD(mecanumDriveBaseSub,main_dashboardTelemetry));
     }
 
