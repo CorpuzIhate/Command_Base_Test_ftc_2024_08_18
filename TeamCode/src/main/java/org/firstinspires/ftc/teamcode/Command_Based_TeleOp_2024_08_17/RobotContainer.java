@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Subsystems
 public class RobotContainer extends OpMode {
 
     private final MecanumDriveBaseSubsystem mecanumDriveBaseSub = new MecanumDriveBaseSubsystem();
-    public final GamepadEx driverOp = new GamepadEx(gamepad1);
 
     //delete ftc dashboard during competition to prevent errors.
     //FTC Dashboard is PROHIBITED during games but allowed during pits
@@ -28,7 +27,7 @@ public class RobotContainer extends OpMode {
 
 
     public void init(){
-        mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickCMD(mecanumDriveBaseSub,main_dashboardTelemetry /*, driverOp*/));
+        mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickCMD(mecanumDriveBaseSub,main_dashboardTelemetry));
     }
 
     public void loop(){
