@@ -64,7 +64,9 @@ public class RobotContainer extends OpMode {
         strafePwr = -gamepad1.left_stick_x;
         rotationPwr = -gamepad1.right_stick_x;
 
-
+        main_dashboardTelemetry.addData("m_forwardPower (RobotContainer)", fwdPwr);
+        main_dashboardTelemetry.addData("m_strafePower (RobotContainer)", strafePwr);
+        main_dashboardTelemetry.addData("m_rotationPower (RobotContainer)", rotationPwr);
 
         CommandScheduler.getInstance().run();
         main_dashboardTelemetry.update();

@@ -11,6 +11,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Constants;
 import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Subsystems.MecanumDriveBaseSubsystem;
 
+import java.util.function.DoubleSupplier;
+
 public class TeleOpJoystickCMD extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final MecanumDriveBaseSubsystem m_MecanumSub;
@@ -83,6 +85,17 @@ public class TeleOpJoystickCMD extends CommandBase {
 
         m_dashboardTelemetry.addData("hello urmom", m_MecanumSub.urmom);
 
+        m_dashboardTelemetry.addData("m_forwardPower (COMMAND)", m_forwardPower);
+        m_dashboardTelemetry.addData("m_strafePower (COMMAND)", m_strafePower);
+        m_dashboardTelemetry.addData("m_rotationPower (COMMAND)", m_rotationPower);
+
+
+
+
+    }
+    @Override
+    public boolean isFinished(){
+        return false;
     }
 
 }
