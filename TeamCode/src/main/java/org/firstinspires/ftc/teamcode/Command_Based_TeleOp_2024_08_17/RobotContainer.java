@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17;
 
 
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 
@@ -25,25 +27,36 @@ public class RobotContainer extends OpMode {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry main_dashboardTelemetry = dashboard.getTelemetry();
 
-//    GamepadEx driverOp;
 
     double fwdPwr;
     double strafePwr;
     double rotationPwr;
+    Motor frontLeft;
+    Motor frontRight;
+    Motor backLeft;
+    Motor backRight;
+
 
     public void init(){
         fwdPwr = -gamepad1.left_stick_y;
         strafePwr = -gamepad1.left_stick_x;
         rotationPwr = -gamepad1.right_stick_x;
 
-//        Constants.Motors.frontLeft.setRunMode(Motor.RunMode.RawPower);
-//        Constants.Motors.frontRight.setRunMode(Motor.RunMode.RawPower);
-//        Constants.Motors.backLeft.setRunMode(Motor.RunMode.RawPower);
-//        Constants.Motors.backRight.setRunMode(Motor.RunMode.RawPower);
+        frontLeft = new Motor(hardwareMap, "front_left");
+        frontRight = new Motor(hardwareMap, "front_right");
+        backLeft = new Motor(hardwareMap, "back_left");
+        backRight = new Motor(hardwareMap, "back_right");
+
+        frontLeft.setRunMode(Motor.RunMode.RawPower);
+        frontRight.setRunMode(Motor.RunMode.RawPower);
+        backLeft.setRunMode(Motor.RunMode.RawPower);
+        backRight.setRunMode(Motor.RunMode.RawPower);
 
 
-//        mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickCMD(mecanumDriveBaseSub,
-//                main_dashboardTelemetry, fwdPwr, strafePwr,rotationPwr ));
+
+       mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickCMD(mecanumDriveBaseSub,
+                main_dashboardTelemetry, fwdPwr, strafePwr,rotationPwr,
+               frontLeft, frontRight, backLeft, backRight));
     }
 
     public void loop(){

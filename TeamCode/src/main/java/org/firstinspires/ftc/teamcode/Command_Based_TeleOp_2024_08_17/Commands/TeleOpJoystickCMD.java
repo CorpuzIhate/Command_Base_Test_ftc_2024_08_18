@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Commands;
 
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -25,8 +26,11 @@ public class TeleOpJoystickCMD extends CommandBase {
     double backLeftSpeed;
     double backRightSpeed;
 
+    Motor m_FL,m_FR,m_BL,m_BR;
+
     public TeleOpJoystickCMD(MecanumDriveBaseSubsystem mecanumDriveBaseSubsystem,
-                             Telemetry dashboardTelemetry, double forwardPower, double strafePower, double rotationPower
+                             Telemetry dashboardTelemetry, double forwardPower, double strafePower, double rotationPower,
+                             Motor FL, Motor FR, Motor BL, Motor BR
     ) {
         m_dashboardTelemetry = dashboardTelemetry;
         m_MecanumSub = mecanumDriveBaseSubsystem;
@@ -35,6 +39,10 @@ public class TeleOpJoystickCMD extends CommandBase {
         m_strafePower = strafePower;
         m_rotationPower = rotationPower;
 
+        m_FL = FL;
+        m_FR = FR;
+        m_BL = BL;
+        m_BR = BR;
 
 
         addRequirements(mecanumDriveBaseSubsystem);
@@ -68,10 +76,10 @@ public class TeleOpJoystickCMD extends CommandBase {
             backRightSpeed /= max;
         }
 
-//        Constants.Motors.frontLeft.set(frontLeftSpeed);
-//        Constants.Motors.frontRight.set(frontRightSpeed);
-//        Constants.Motors.backLeft.set(backLeftSpeed);
-//        Constants.Motors.backRight.set(backRightSpeed);
+        m_FL.set(frontLeftSpeed);
+        m_FR.set(frontRightSpeed);
+        m_BL.set(backLeftSpeed);
+        m_BR.set(backRightSpeed);
 
         m_dashboardTelemetry.addData("hello urmom", m_MecanumSub.urmom);
 

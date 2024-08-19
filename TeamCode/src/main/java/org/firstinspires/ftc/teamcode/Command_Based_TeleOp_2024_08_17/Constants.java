@@ -9,11 +9,6 @@ public final class Constants{
 
         public static double speed;
 
-        public static final Motor frontLeft = new Motor(hardwareMap, "front_left");
-        public static final Motor frontRight = new Motor(hardwareMap, "front_right");
-        public static final Motor backLeft = new Motor(hardwareMap, "back_left");
-        public static final Motor backRight = new Motor(hardwareMap, "back_right");
-
 
     }
 
