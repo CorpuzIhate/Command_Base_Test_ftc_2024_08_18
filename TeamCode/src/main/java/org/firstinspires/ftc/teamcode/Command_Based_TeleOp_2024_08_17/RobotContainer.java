@@ -25,7 +25,7 @@ public class RobotContainer extends OpMode {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry main_dashboardTelemetry = dashboard.getTelemetry();
 
-    GamepadEx driverOp;
+//    GamepadEx driverOp;
 
     double fwdPwr;
     double strafePwr;
@@ -36,14 +36,14 @@ public class RobotContainer extends OpMode {
         strafePwr = -gamepad1.left_stick_x;
         rotationPwr = -gamepad1.right_stick_x;
 
-        Constants.Motors.frontLeft.setRunMode(Motor.RunMode.RawPower);
-        Constants.Motors.frontRight.setRunMode(Motor.RunMode.RawPower);
-        Constants.Motors.backLeft.setRunMode(Motor.RunMode.RawPower);
-        Constants.Motors.backRight.setRunMode(Motor.RunMode.RawPower);
+//        Constants.Motors.frontLeft.setRunMode(Motor.RunMode.RawPower);
+//        Constants.Motors.frontRight.setRunMode(Motor.RunMode.RawPower);
+//        Constants.Motors.backLeft.setRunMode(Motor.RunMode.RawPower);
+//        Constants.Motors.backRight.setRunMode(Motor.RunMode.RawPower);
 
 
-        mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickCMD(mecanumDriveBaseSub,
-                main_dashboardTelemetry, fwdPwr, strafePwr,rotationPwr ));
+//        mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickCMD(mecanumDriveBaseSub,
+//                main_dashboardTelemetry, fwdPwr, strafePwr,rotationPwr ));
     }
 
     public void loop(){

@@ -61,17 +61,17 @@ public class TeleOpJoystickCMD extends CommandBase {
 
 
         // if the faster motor at the moment has a power over 1, we divide all motors by the max
-        if(max > 1.0) {
+        if (max > 1.0) {
             frontLeftSpeed /= max;
             frontRightSpeed /= max;
             backLeftSpeed /= max;
             backRightSpeed /= max;
         }
 
-        Constants.Motors.frontLeft.set(frontLeftSpeed);
-        Constants.Motors.frontRight.set(frontRightSpeed);
-        Constants.Motors.backLeft.set(backLeftSpeed);
-        Constants.Motors.backRight.set(backRightSpeed);
+//        Constants.Motors.frontLeft.set(frontLeftSpeed);
+//        Constants.Motors.frontRight.set(frontRightSpeed);
+//        Constants.Motors.backLeft.set(backLeftSpeed);
+//        Constants.Motors.backRight.set(backRightSpeed);
 
         m_dashboardTelemetry.addData("hello urmom", m_MecanumSub.urmom);
 
