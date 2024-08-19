@@ -7,28 +7,71 @@ import com.arcrobotics.ftclib.command.CommandBase;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Constants;
 import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Subsystems.MecanumDriveBaseSubsystem;
 
 public class TeleOpJoystickCMD extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final MecanumDriveBaseSubsystem m_MecanumSub;
     private final Telemetry m_dashboardTelemetry;
+    private double m_forwardPower;
+    private double m_strafePower;
+    private double m_rotationPower;
 
+
+
+    double frontLeftSpeed;
+    double frontRightSpeed;
+    double backLeftSpeed;
+    double backRightSpeed;
 
     public TeleOpJoystickCMD(MecanumDriveBaseSubsystem mecanumDriveBaseSubsystem,
-                             Telemetry dashboardTelemetry
+                             Telemetry dashboardTelemetry, double forwardPower, double strafePower, double rotationPower
     ) {
-
         m_dashboardTelemetry = dashboardTelemetry;
         m_MecanumSub = mecanumDriveBaseSubsystem;
+
+        m_forwardPower = forwardPower;
+        m_strafePower = strafePower;
+        m_rotationPower = rotationPower;
+
+
 
         addRequirements(mecanumDriveBaseSubsystem);
     }
     @Override
     public  void execute(){
 
+        frontLeftSpeed = m_forwardPower - m_strafePower - m_rotationPower;
+        backLeftSpeed = m_forwardPower + m_strafePower - m_rotationPower;
+        frontRightSpeed = m_forwardPower + m_strafePower + m_rotationPower;
+        backRightSpeed= m_forwardPower -m_strafePower + m_rotationPower;
+
+        //math.max tale 2 doubles and figure out which one is higher
+        // This is used to determine the current max speed as different sides of the robot
+        // may have their motors moving faster
 
 
+        double max = Math.max(Math.abs(frontLeftSpeed), Math.abs(frontRightSpeed));
+
+        //first we compare the front motors. then we compare that with the back motors to find
+        // the fastest motor
+        max = Math.max(max, Math.abs(backLeftSpeed));
+        max = Math.max(max, Math.abs(backRightSpeed));
+
+
+        // if the faster motor at the moment has a power over 1, we divide all motors by the max
+        if(max > 1.0) {
+            frontLeftSpeed /= max;
+            frontRightSpeed /= max;
+            backLeftSpeed /= max;
+            backRightSpeed /= max;
+        }
+
+        Constants.Motors.frontLeft.set(frontLeftSpeed);
+        Constants.Motors.frontRight.set(frontRightSpeed);
+        Constants.Motors.backLeft.set(backLeftSpeed);
+        Constants.Motors.backRight.set(backRightSpeed);
 
         m_dashboardTelemetry.addData("hello urmom", m_MecanumSub.urmom);
 
