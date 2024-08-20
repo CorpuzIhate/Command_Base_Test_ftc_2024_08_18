@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Commands;
 
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 
 
@@ -17,9 +18,9 @@ public class TeleOpJoystickCMD extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final MecanumDriveBaseSubsystem m_MecanumSub;
     private final Telemetry m_dashboardTelemetry;
-    private double m_forwardPower;
-    private double m_strafePower;
-    private double m_rotationPower;
+    private DoubleSupplier m_forwardPower;
+    private DoubleSupplier m_strafePower;
+    private DoubleSupplier m_rotationPower;
 
 
 
@@ -31,7 +32,8 @@ public class TeleOpJoystickCMD extends CommandBase {
     Motor m_FL,m_FR,m_BL,m_BR;
 
     public TeleOpJoystickCMD(MecanumDriveBaseSubsystem mecanumDriveBaseSubsystem,
-                             Telemetry dashboardTelemetry, double forwardPower, double strafePower, double rotationPower,
+                             Telemetry dashboardTelemetry, DoubleSupplier forwardPower,
+                             DoubleSupplier strafePower, DoubleSupplier rotationPower,
                              Motor FL, Motor FR, Motor BL, Motor BR
     ) {
         m_dashboardTelemetry = dashboardTelemetry;
@@ -52,10 +54,10 @@ public class TeleOpJoystickCMD extends CommandBase {
     @Override
     public  void execute(){
 
-        frontLeftSpeed = m_forwardPower - m_strafePower - m_rotationPower;
-        backLeftSpeed = m_forwardPower + m_strafePower - m_rotationPower;
-        frontRightSpeed = m_forwardPower + m_strafePower + m_rotationPower;
-        backRightSpeed= m_forwardPower -m_strafePower + m_rotationPower;
+        frontLeftSpeed = m_forwardPower.getAsDouble() - m_strafePower.getAsDouble() - m_rotationPower.getAsDouble();
+        backLeftSpeed = m_forwardPower.getAsDouble() + m_strafePower.getAsDouble() - m_rotationPower.getAsDouble();
+        frontRightSpeed = m_forwardPower.getAsDouble() + m_strafePower.getAsDouble() + m_rotationPower.getAsDouble();
+        backRightSpeed= m_forwardPower.getAsDouble() -m_strafePower.getAsDouble() + m_rotationPower.getAsDouble();
 
         //math.max tale 2 doubles and figure out which one is higher
         // This is used to determine the current max speed as different sides of the robot

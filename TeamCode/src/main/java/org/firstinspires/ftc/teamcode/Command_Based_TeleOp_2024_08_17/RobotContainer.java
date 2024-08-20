@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Subsystems
 
 
 @TeleOp(name = "Command Base Test")
-public class RobotContainer extends OpMode {
+public class RobotContainer extends CommandOpMode {
 
     private final MecanumDriveBaseSubsystem mecanumDriveBaseSub = new MecanumDriveBaseSubsystem();
 
@@ -36,8 +37,9 @@ public class RobotContainer extends OpMode {
     Motor backLeft;
     Motor backRight;
 
-
-    public void init(){
+    public GamepadEx driverOP;
+    @Override
+    public void initialize(){
         fwdPwr = -gamepad1.left_stick_y;
         strafePwr = -gamepad1.left_stick_x;
         rotationPwr = -gamepad1.right_stick_x;
@@ -51,28 +53,19 @@ public class RobotContainer extends OpMode {
         frontRight.setRunMode(Motor.RunMode.RawPower);
         backLeft.setRunMode(Motor.RunMode.RawPower);
         backRight.setRunMode(Motor.RunMode.RawPower);
-
+        driverOP = new GamepadEx(gamepad1);
 
 
        mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickCMD(mecanumDriveBaseSub,
-                main_dashboardTelemetry, fwdPwr, strafePwr,rotationPwr,
+                main_dashboardTelemetry, driverOP::getLeftY, driverOP::getLeftX,driverOP::getRightX,
                frontLeft, frontRight, backLeft, backRight));
     }
 
-    public void loop(){
-        fwdPwr = -gamepad1.left_stick_y;
-        strafePwr = -gamepad1.left_stick_x;
-        rotationPwr = -gamepad1.right_stick_x;
 
-        main_dashboardTelemetry.addData("m_forwardPower (RobotContainer)", fwdPwr);
-        main_dashboardTelemetry.addData("m_strafePower (RobotContainer)", strafePwr);
-        main_dashboardTelemetry.addData("m_rotationPower (RobotContainer)", rotationPwr);
-
-        CommandScheduler.getInstance().run();
-        main_dashboardTelemetry.update();
-    }
 
 
 
 
 }
+
+
