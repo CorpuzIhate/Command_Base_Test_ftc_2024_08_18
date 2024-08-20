@@ -3,11 +3,18 @@ package org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Commands;
 
 
 
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Subsystems.MecanumDriveBaseSubsystem;
 
 import java.util.function.DoubleSupplier;
@@ -29,10 +36,14 @@ public class TeleOpJoystickRobotCentricCMD extends CommandBase {
 
     Motor m_FL,m_FR,m_BL,m_BR;
 
+
+    BNO055IMU m_imu;
+    double imuX;
+
     public TeleOpJoystickRobotCentricCMD(MecanumDriveBaseSubsystem mecanumDriveBaseSubsystem,
                                          Telemetry dashboardTelemetry, DoubleSupplier forwardPower,
                                          DoubleSupplier strafePower, DoubleSupplier rotationPower,
-                                         Motor FL, Motor FR, Motor BL, Motor BR
+                                         Motor FL, Motor FR, Motor BL, Motor BR, BNO055IMU imu
     ) {
         m_dashboardTelemetry = dashboardTelemetry;
         m_MecanumSub = mecanumDriveBaseSubsystem;
@@ -46,6 +57,7 @@ public class TeleOpJoystickRobotCentricCMD extends CommandBase {
         m_BL = BL;
         m_BR = BR;
 
+        m_imu = imu;
 
         addRequirements(mecanumDriveBaseSubsystem);
     }
@@ -60,8 +72,10 @@ public class TeleOpJoystickRobotCentricCMD extends CommandBase {
         m_BL.set(motorSpeeds[2]);
         m_BR.set(motorSpeeds[3]);
 
+        imuX = m_imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYX, DEGREES).firstAngle;
 
-        m_dashboardTelemetry.addData("hello urmom", m_MecanumSub.urmom);
+
+        m_dashboardTelemetry.addData("pitch",imuX);
 
         m_dashboardTelemetry.addData("m_forwardPower (COMMAND)", m_forwardPower);
         m_dashboardTelemetry.addData("m_strafePower (COMMAND)", m_strafePower);

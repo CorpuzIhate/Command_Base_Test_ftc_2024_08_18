@@ -8,7 +8,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 public class MecanumDriveBaseSubsystem extends SubsystemBase {
 
 
-    public int urmom = 2;
+
 
     public MecanumDriveBaseSubsystem(){
 

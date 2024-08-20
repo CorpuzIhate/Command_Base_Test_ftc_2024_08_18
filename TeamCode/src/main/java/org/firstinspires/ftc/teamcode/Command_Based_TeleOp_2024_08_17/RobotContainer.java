@@ -69,12 +69,11 @@ public class RobotContainer extends CommandOpMode {
 
         myIMUparameters = new BNO055IMU.Parameters();
 
-        myIMUparameters.angleUnit = myIMUparameters.angleUnit.RADIANS;
+        myIMUparameters.angleUnit = myIMUparameters.angleUnit.DEGREES;
 
         myIMUparameters.calibrationDataFile = "BNO055IMUCalibration.json";
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-
         imu.initialize(myIMUparameters);
 
         telemetryManagerSub.setDefaultCommand(new PerpetualCommand(new TelemetryManagerCMD(telemetryManagerSub)));
@@ -82,7 +81,7 @@ public class RobotContainer extends CommandOpMode {
 
         mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickRobotCentricCMD(mecanumDriveBaseSub,
                 telemetryManagerSub.getTelemetryObject(), driverOP::getLeftY, driverOP::getLeftX, driverOP::getRightX,
-                frontLeft, frontRight, backLeft, backRight));
+                frontLeft, frontRight, backLeft, backRight, imu));
 
 
     }
