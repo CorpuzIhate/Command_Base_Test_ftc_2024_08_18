@@ -18,9 +18,9 @@ public class TeleOpJoystickCMD extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final MecanumDriveBaseSubsystem m_MecanumSub;
     private final Telemetry m_dashboardTelemetry;
-    private DoubleSupplier m_forwardPower;
-    private DoubleSupplier m_strafePower;
-    private DoubleSupplier m_rotationPower;
+    private double m_forwardPower;
+    private double m_strafePower;
+    private double m_rotationPower;
 
 
 
@@ -39,9 +39,9 @@ public class TeleOpJoystickCMD extends CommandBase {
         m_dashboardTelemetry = dashboardTelemetry;
         m_MecanumSub = mecanumDriveBaseSubsystem;
 
-        m_forwardPower = forwardPower;
-        m_strafePower = strafePower;
-        m_rotationPower = rotationPower;
+        m_forwardPower = -forwardPower.getAsDouble();
+        m_strafePower = -strafePower.getAsDouble();
+        m_rotationPower = -rotationPower.getAsDouble();
 
         m_FL = FL;
         m_FR = FR;
@@ -54,10 +54,10 @@ public class TeleOpJoystickCMD extends CommandBase {
     @Override
     public  void execute(){
 
-        frontLeftSpeed = m_forwardPower.getAsDouble() - m_strafePower.getAsDouble() - m_rotationPower.getAsDouble();
-        backLeftSpeed = m_forwardPower.getAsDouble() + m_strafePower.getAsDouble() - m_rotationPower.getAsDouble();
-        frontRightSpeed = m_forwardPower.getAsDouble() + m_strafePower.getAsDouble() + m_rotationPower.getAsDouble();
-        backRightSpeed= m_forwardPower.getAsDouble() -m_strafePower.getAsDouble() + m_rotationPower.getAsDouble();
+        frontLeftSpeed = m_forwardPower - m_strafePower - m_rotationPower;
+        backLeftSpeed = m_forwardPower + m_strafePower - m_rotationPower;
+        frontRightSpeed = m_forwardPower + m_strafePower + m_rotationPower;
+        backRightSpeed= m_forwardPower -m_strafePower + m_rotationPower;
 
         //math.max tale 2 doubles and figure out which one is higher
         // This is used to determine the current max speed as different sides of the robot
