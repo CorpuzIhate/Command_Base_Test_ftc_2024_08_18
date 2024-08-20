@@ -53,37 +53,15 @@ public class TeleOpJoystickCMD extends CommandBase {
     }
     @Override
     public  void execute(){
+        double[] motorSpeeds = new double[4];
+        motorSpeeds = m_MecanumSub.setMotorSpeeds(m_forwardPower.getAsDouble(),
+                m_strafePower.getAsDouble(),m_rotationPower.getAsDouble());
 
-        frontLeftSpeed = m_forwardPower.getAsDouble() - m_strafePower.getAsDouble() - m_rotationPower.getAsDouble();
-        backLeftSpeed = m_forwardPower.getAsDouble() + m_strafePower.getAsDouble() - m_rotationPower.getAsDouble();
-        frontRightSpeed = m_forwardPower.getAsDouble() + m_strafePower.getAsDouble() + m_rotationPower.getAsDouble();
-        backRightSpeed= m_forwardPower.getAsDouble() -m_strafePower.getAsDouble() + m_rotationPower.getAsDouble();
+        m_FL.set(motorSpeeds[0]);
+        m_FR.set(motorSpeeds[1]);
+        m_BL.set(motorSpeeds[2]);
+        m_BR.set(motorSpeeds[3]);
 
-        //math.max tale 2 doubles and figure out which one is higher
-        // This is used to determine the current max speed as different sides of the robot
-        // may have their motors moving faster
-
-
-        double max = Math.max(Math.abs(frontLeftSpeed), Math.abs(frontRightSpeed));
-
-        //first we compare the front motors. then we compare that with the back motors to find
-        // the fastest motor
-        max = Math.max(max, Math.abs(backLeftSpeed));
-        max = Math.max(max, Math.abs(backRightSpeed));
-
-
-        // if the faster motor at the moment has a power over 1, we divide all motors by the max
-        if (max > 1.0) {
-            frontLeftSpeed /= max;
-            frontRightSpeed /= max;
-            backLeftSpeed /= max;
-            backRightSpeed /= max;
-        }
-
-        m_FL.set(frontLeftSpeed);
-        m_FR.set(frontRightSpeed);
-        m_BL.set(backLeftSpeed);
-        m_BR.set(backRightSpeed);
 
         m_dashboardTelemetry.addData("hello urmom", m_MecanumSub.urmom);
 

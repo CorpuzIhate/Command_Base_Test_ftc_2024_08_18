@@ -32,6 +32,7 @@ public class RobotContainer extends CommandOpMode {
     double fwdPwr;
     double strafePwr;
     double rotationPwr;
+
     Motor frontLeft;
     Motor frontRight;
     Motor backLeft;
@@ -53,6 +54,9 @@ public class RobotContainer extends CommandOpMode {
         frontRight.setRunMode(Motor.RunMode.RawPower);
         backLeft.setRunMode(Motor.RunMode.RawPower);
         backRight.setRunMode(Motor.RunMode.RawPower);
+
+        backLeft.setInverted(true);
+        backRight.setInverted(true);
         driverOP = new GamepadEx(gamepad1);
 
 
