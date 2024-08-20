@@ -4,17 +4,15 @@ package org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Commands;
 
 
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Constants;
 import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Subsystems.MecanumDriveBaseSubsystem;
 
 import java.util.function.DoubleSupplier;
 
-public class TeleOpJoystickCMD extends CommandBase {
+public class TeleOpJoystickRobotCentricCMD extends CommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final MecanumDriveBaseSubsystem m_MecanumSub;
     private final Telemetry m_dashboardTelemetry;
@@ -31,10 +29,10 @@ public class TeleOpJoystickCMD extends CommandBase {
 
     Motor m_FL,m_FR,m_BL,m_BR;
 
-    public TeleOpJoystickCMD(MecanumDriveBaseSubsystem mecanumDriveBaseSubsystem,
-                             Telemetry dashboardTelemetry, DoubleSupplier forwardPower,
-                             DoubleSupplier strafePower, DoubleSupplier rotationPower,
-                             Motor FL, Motor FR, Motor BL, Motor BR
+    public TeleOpJoystickRobotCentricCMD(MecanumDriveBaseSubsystem mecanumDriveBaseSubsystem,
+                                         Telemetry dashboardTelemetry, DoubleSupplier forwardPower,
+                                         DoubleSupplier strafePower, DoubleSupplier rotationPower,
+                                         Motor FL, Motor FR, Motor BL, Motor BR
     ) {
         m_dashboardTelemetry = dashboardTelemetry;
         m_MecanumSub = mecanumDriveBaseSubsystem;
