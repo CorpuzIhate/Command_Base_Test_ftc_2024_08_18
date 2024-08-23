@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 
 import com.arcrobotics.ftclib.command.PerpetualCommand;
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -15,6 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Commands.TeleOpJoystickFieldCentricCMD;
 import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Commands.TeleOpJoystickRobotCentricCMD;
 import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Commands.TelemetryManagerCMD;
 import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Subsystems.MecanumDriveBaseSubsystem;
@@ -42,6 +44,7 @@ public class RobotContainer extends CommandOpMode {
     Motor backRight;
 
     public GamepadEx driverOP;
+    private MecanumDrive drive;
 
     @Override
     public void initialize() {
@@ -64,6 +67,7 @@ public class RobotContainer extends CommandOpMode {
         backRight.setInverted(true);
         driverOP = new GamepadEx(gamepad1);
 
+        drive = new MecanumDrive(frontLeft,frontRight,backLeft, backRight);
 
         BNO055IMU.Parameters myIMUparameters;
 
@@ -79,11 +83,13 @@ public class RobotContainer extends CommandOpMode {
         telemetryManagerSub.setDefaultCommand(new PerpetualCommand(new TelemetryManagerCMD(telemetryManagerSub)));
 
 
-        mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickRobotCentricCMD(mecanumDriveBaseSub,
-                telemetryManagerSub.getTelemetryObject(), driverOP::getLeftY, driverOP::getLeftX, driverOP::getRightX,
-                frontLeft, frontRight, backLeft, backRight, imu));
+//        mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickRobotCentricCMD(mecanumDriveBaseSub,
+//                telemetryManagerSub.getTelemetryObject(), driverOP::getLeftY, driverOP::getLeftX, driverOP::getRightX,
+//                frontLeft, frontRight, backLeft, backRight, imu));
 
 
+        mecanumDriveBaseSub.setDefaultCommand(new TeleOpJoystickFieldCentricCMD(mecanumDriveBaseSub, drive,
+                driverOP::getLeftY, driverOP::getLeftX, driverOP::getRightX , imu));
     }
 
 
