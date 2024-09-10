@@ -11,6 +11,7 @@ public class TelemetryManagerCMD extends CommandBase {
     public TelemetryManagerCMD(TelemetryManagerSubsystem telemetryManagerSubsystem){
         m_TelemetryManagerSubsystem = telemetryManagerSubsystem;
         addRequirements(telemetryManagerSubsystem);
+        //hi
     }
 
     @Override
