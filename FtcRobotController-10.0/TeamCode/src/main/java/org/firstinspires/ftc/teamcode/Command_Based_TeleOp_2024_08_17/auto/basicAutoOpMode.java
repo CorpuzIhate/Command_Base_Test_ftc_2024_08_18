@@ -39,9 +39,16 @@ public class basicAutoOpMode extends OpMode {
 
     @Override
     public void init() {
+
+
+        // the current position of the motor
+
         fwdPwr = -gamepad1.left_stick_y;
         strafePwr = -gamepad1.left_stick_x;
         rotationPwr = -gamepad1.right_stick_x;
+
+
+
 
 
         frontLeft = new Motor(hardwareMap, "front_left");
@@ -49,13 +56,34 @@ public class basicAutoOpMode extends OpMode {
         backLeft = new Motor(hardwareMap, "back_left");
         backRight = new Motor(hardwareMap, "back_right");
 
+        // reset the encoder
+        frontLeft.resetEncoder();
+        frontRight.resetEncoder();
+        backLeft.resetEncoder();
+        backRight.resetEncoder();
+
         frontLeft.setRunMode(Motor.RunMode.PositionControl);
         frontRight.setRunMode(Motor.RunMode.PositionControl);
         backLeft.setRunMode(Motor.RunMode.PositionControl);
         backRight.setRunMode(Motor.RunMode.PositionControl);
 
-        backLeft.setInverted(true);
-        backRight.setInverted(true);
+        frontLeft.setPositionCoefficient(0.05);
+        frontRight.setPositionCoefficient(0.05);
+        backLeft.setPositionCoefficient(0.05);
+        backRight.setPositionCoefficient(0.05);
+
+        frontLeft.setPositionTolerance(13.6);
+        frontRight.setPositionTolerance(13.6);
+        backLeft.setPositionTolerance(13.6);
+        backRight.setPositionTolerance(13.6);
+
+
+
+
+
+
+
+
         driverOP = new GamepadEx(gamepad1);
 
 
@@ -71,10 +99,17 @@ public class basicAutoOpMode extends OpMode {
 
         imu.initialize(myIMUparameters);
 
-        frontLeft.setTargetDistance(10 * dpp);
-        frontRight.setTargetDistance(10 * dpp);
-        backLeft.setTargetDistance(10 * dpp);
-        backRight.setTargetDistance(10 * dpp);
+        frontLeft.setDistancePerPulse(dpp);
+        frontRight.setDistancePerPulse(dpp);
+        backLeft.setDistancePerPulse(dpp);
+        backRight.setDistancePerPulse(dpp);
+
+        frontLeft.setTargetDistance(2);
+        frontRight.setTargetDistance(2);
+        backLeft.setTargetDistance(2);
+        backRight.setTargetDistance(2);
+
+
 
 
 
@@ -82,11 +117,18 @@ public class basicAutoOpMode extends OpMode {
     }
     @Override
     public  void loop(){
-
+        telemetry.addData("frontLeft_position", frontLeft.getCurrentPosition());
+        telemetry.addData("frontRight_position", frontRight.getCurrentPosition());
+        telemetry.addData("backLeft_position", backLeft.getCurrentPosition());
+        telemetry.addData("backRight_position", backRight.getCurrentPosition());
         frontLeft.set(0.5);
         frontRight.set(0.5);
         backRight.set(0.5);
         backLeft.set(0.5);
+
+
+        telemetry.update();
+
     }
 
 
