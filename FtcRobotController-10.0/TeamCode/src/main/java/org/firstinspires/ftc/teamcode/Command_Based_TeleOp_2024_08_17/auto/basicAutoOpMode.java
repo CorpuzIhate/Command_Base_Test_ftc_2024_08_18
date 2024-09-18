@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Subsystems
 
 
 @Autonomous(name = "Command Auto")
-public class basicAutoOpMode extends OpMode {
+public class basicAutoOpMode extends LinearOpMode {
 
 
     private BNO055IMU imu;
@@ -27,7 +28,7 @@ public class basicAutoOpMode extends OpMode {
     double strafePwr;
     double rotationPwr;
 
-    Motor frontLeft;
+    private Motor frontLeft;
     Motor frontRight;
     Motor backLeft;
     Motor backRight;
@@ -36,15 +37,10 @@ public class basicAutoOpMode extends OpMode {
     public double dpp = (3 * Math.PI) / 560;
 
     @Override
-    public void init() {
+    public void runOpMode() {
 
 
         // the current position of the motor
-
-        fwdPwr = -gamepad1.left_stick_y;
-        strafePwr = -gamepad1.left_stick_x;
-        rotationPwr = -gamepad1.right_stick_x;
-
 
         frontLeft = new Motor(hardwareMap, "front_left");
         frontRight = new Motor(hardwareMap, "front_right");
@@ -76,17 +72,6 @@ public class basicAutoOpMode extends OpMode {
         driverOP = new GamepadEx(gamepad1);
 
 
-        BNO055IMU.Parameters myIMUparameters;
-
-        myIMUparameters = new BNO055IMU.Parameters();
-
-        myIMUparameters.angleUnit = myIMUparameters.angleUnit.RADIANS;
-
-        myIMUparameters.calibrationDataFile = "BNO055IMUCalibration.json";
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-        imu.initialize(myIMUparameters);
 
         frontLeft.setTargetPosition(1200);
         frontRight.setTargetPosition(1200);
@@ -97,43 +82,15 @@ public class basicAutoOpMode extends OpMode {
         frontRight.set(0);
         backRight.set(0);
         backLeft.set(0);
-
-
-    }
-
-    @Override
-    public void loop() {
-        telemetry.addData("frontLeft_position", frontLeft.getCurrentPosition());
-        telemetry.addData("frontRight_position", frontRight.getCurrentPosition());
-        telemetry.addData("backLeft_position", backLeft.getCurrentPosition());
-        telemetry.addData("backRight_position", backRight.getCurrentPosition());
-
-        telemetry.addData("frontLeft_At_position", frontLeft.atTargetPosition());
-        telemetry.addData("frontRightt_At_position", frontRight.atTargetPosition());
-        telemetry.addData("backLeftt_At_position", backLeft.atTargetPosition());
-        telemetry.addData("backRightt_At_position", backRight.atTargetPosition());
-        if (!frontLeft.atTargetPosition()) {
+        while(!frontLeft.atTargetPosition() ){
             frontLeft.set(0.5);
-        }
-
-        if (!frontRight.atTargetPosition()) {
-            frontRight.set(0.5);
-        }
-        if (!backRight.atTargetPosition()) {
-            backRight.set(0.5);
-
-            if (!backLeft.atTargetPosition()) {
-                backLeft.set(0.5);
-            }
 
 
-            telemetry.update();
+
 
         }
+        frontLeft.stopMotor();
 
 
     }
-
-
 }
-
