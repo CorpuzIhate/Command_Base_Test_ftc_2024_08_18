@@ -20,8 +20,6 @@ import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Subsystems
 public class basicAutoOpMode extends OpMode {
 
 
-
-
     private BNO055IMU imu;
 
 
@@ -35,7 +33,7 @@ public class basicAutoOpMode extends OpMode {
     Motor backRight;
 
     public GamepadEx driverOP;
-    public double dpp = (3* Math.PI ) / 560;
+    public double dpp = (3 * Math.PI) / 560;
 
     @Override
     public void init() {
@@ -46,9 +44,6 @@ public class basicAutoOpMode extends OpMode {
         fwdPwr = -gamepad1.left_stick_y;
         strafePwr = -gamepad1.left_stick_x;
         rotationPwr = -gamepad1.right_stick_x;
-
-
-
 
 
         frontLeft = new Motor(hardwareMap, "front_left");
@@ -78,12 +73,6 @@ public class basicAutoOpMode extends OpMode {
         backRight.setPositionTolerance(13.6);
 
 
-
-
-
-
-
-
         driverOP = new GamepadEx(gamepad1);
 
 
@@ -99,42 +88,52 @@ public class basicAutoOpMode extends OpMode {
 
         imu.initialize(myIMUparameters);
 
-        frontLeft.setDistancePerPulse(dpp);
-        frontRight.setDistancePerPulse(dpp);
-        backLeft.setDistancePerPulse(dpp);
-        backRight.setDistancePerPulse(dpp);
+        frontLeft.setTargetPosition(1200);
+        frontRight.setTargetPosition(1200);
+        backLeft.setTargetPosition(1200);
+        backRight.setTargetPosition(1200);
 
-        frontLeft.setTargetDistance(2);
-        frontRight.setTargetDistance(2);
-        backLeft.setTargetDistance(2);
-        backRight.setTargetDistance(2);
-
-
-
-
+        frontLeft.set(0);
+        frontRight.set(0);
+        backRight.set(0);
+        backLeft.set(0);
 
 
     }
+
     @Override
-    public  void loop(){
+    public void loop() {
         telemetry.addData("frontLeft_position", frontLeft.getCurrentPosition());
         telemetry.addData("frontRight_position", frontRight.getCurrentPosition());
         telemetry.addData("backLeft_position", backLeft.getCurrentPosition());
         telemetry.addData("backRight_position", backRight.getCurrentPosition());
-        frontLeft.set(0.5);
-        frontRight.set(0.5);
-        backRight.set(0.5);
-        backLeft.set(0.5);
+
+        telemetry.addData("frontLeft_At_position", frontLeft.atTargetPosition());
+        telemetry.addData("frontRightt_At_position", frontRight.atTargetPosition());
+        telemetry.addData("backLeftt_At_position", backLeft.atTargetPosition());
+        telemetry.addData("backRightt_At_position", backRight.atTargetPosition());
+        if (!frontLeft.atTargetPosition()) {
+            frontLeft.set(0.5);
+        }
+
+        if (!frontRight.atTargetPosition()) {
+            frontRight.set(0.5);
+        }
+        if (!backRight.atTargetPosition()) {
+            backRight.set(0.5);
+
+            if (!backLeft.atTargetPosition()) {
+                backLeft.set(0.5);
+            }
 
 
-        telemetry.update();
+            telemetry.update();
+
+        }
+
 
     }
 
 
-
-
-
 }
-
 
