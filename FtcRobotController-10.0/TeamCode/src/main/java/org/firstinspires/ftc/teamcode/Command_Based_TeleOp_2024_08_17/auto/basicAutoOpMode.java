@@ -84,13 +84,18 @@ public class basicAutoOpMode extends LinearOpMode {
         backLeft.set(0);
         while(!frontLeft.atTargetPosition() ){
             frontLeft.set(0.5);
+            frontRight.set(0.5);
+            backRight.set(-0.5);
+            backLeft.set(-0.5);
 
 
 
 
         }
         frontLeft.stopMotor();
-
+        frontRight.stopMotor();
+        backRight.stopMotor();
+        backLeft.stopMotor();
 
     }
 }
