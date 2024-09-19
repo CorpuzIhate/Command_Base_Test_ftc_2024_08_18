@@ -7,6 +7,8 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -17,142 +19,102 @@ public class basicAutoOpMode extends LinearOpMode {
 
     FtcDashboard dashboard;
     Telemetry main_dashboardTelemetry;
-    private BNO055IMU imu;
 
 
-    double fwdPwr;
-    double strafePwr;
-    double rotationPwr;
+    private DcMotor frontLeftDriveMotor;
+    private DcMotor frontRightDriveMotor;
+    private DcMotor backLeftDriveMotor;
+    private DcMotor backRightDriveMotor;
 
-    private Motor frontLeft;
-    Motor frontRight;
-    Motor backLeft;
-    Motor backRight;
 
-    public GamepadEx driverOP;
-    public double dpp = (3 * Math.PI) / 560;
+    public int ticksToDist;
     private ElapsedTime runtime = new ElapsedTime();
+    //TODO check if ticks to distance calculation is correct
+    double WHEEL_CIRCUMFERENCE_METERS = (3 * Math.PI) * 0.0254;
 
     @Override
     public void runOpMode() {
+        frontLeftDriveMotor = hardwareMap.get(DcMotor.class, "frontLeft");
+        frontRightDriveMotor = hardwareMap.get(DcMotor.class, "frontRight");
+        backLeftDriveMotor = hardwareMap.get(DcMotor.class, "backLeft");
+        backRightDriveMotor = hardwareMap.get(DcMotor.class, "backRight");
+
+        //TODO check if you need to reverse the motors
+        backLeftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         waitForStart();
-        runtime.reset();
+        driveForwardDistance(0.5, 1);
+    }
 
-        // the current position of the motor
+    private void driveForwardDistance(double power, double distanceMeters) {
 
-        frontLeft = new Motor(hardwareMap, "front_left");
-        frontRight = new Motor(hardwareMap, "front_right");
-        backLeft = new Motor(hardwareMap, "back_left");
-        backRight = new Motor(hardwareMap, "back_right");
+        frontLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // reset the encoder
-        frontLeft.resetEncoder();
-        frontRight.resetEncoder();
-        backLeft.resetEncoder();
-        backRight.resetEncoder();
-
-        frontLeft.setRunMode(Motor.RunMode.PositionControl);
-        frontRight.setRunMode(Motor.RunMode.PositionControl);
-        backLeft.setRunMode(Motor.RunMode.PositionControl);
-        backRight.setRunMode(Motor.RunMode.PositionControl);
-
-        frontLeft.setPositionCoefficient(0.05);
-        frontRight.setPositionCoefficient(0.05);
-        backLeft.setPositionCoefficient(0.05);
-        backRight.setPositionCoefficient(0.05);
-
-        frontLeft.setPositionTolerance(13.6);
-        frontRight.setPositionTolerance(13.6);
-        backLeft.setPositionTolerance(13.6);
-        backRight.setPositionTolerance(13.6);
+        ticksToDist = metersToEncoderTicks(distanceMeters, 560, WHEEL_CIRCUMFERENCE_METERS);
+        frontLeftDriveMotor.setTargetPosition(ticksToDist);
+        frontRightDriveMotor.setTargetPosition(ticksToDist);
+        backLeftDriveMotor.setTargetPosition(ticksToDist);
+        backRightDriveMotor.setTargetPosition(ticksToDist);
 
 
-        driverOP = new GamepadEx(gamepad1);
+        frontLeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setMotorSpeeds(power, 0, 0);
 
 
+        setMotorSpeeds(0, 0, 0);
+    }
 
-        frontLeft.setTargetPosition(1200);
-        frontRight.setTargetPosition(1200);
-        backLeft.setTargetPosition(1200);
-        backRight.setTargetPosition(1200);
-
-        frontLeft.set(0);
-        frontRight.set(0);
-        backRight.set(0);
-        backLeft.set(0);
-
-        frontLeft.resetEncoder();
-        frontRight.resetEncoder();
-        backRight.resetEncoder();
-        backLeft.resetEncoder();
+    private int metersToEncoderTicks(double distMeters, int ticksToRotation, double wheelCircumferenceMeters) {
+        double numRevolutions = distMeters / wheelCircumferenceMeters;
+        int encoderTicks = (int) (numRevolutions * ticksToRotation);
+        return encoderTicks;
+    }
 
 
-
-        dashboard = FtcDashboard.getInstance();
-        main_dashboardTelemetry = dashboard.getTelemetry();
-
-
-
-        boolean motorsAtTargetPosition = frontLeft.atTargetPosition() && frontRight.atTargetPosition() && backLeft.atTargetPosition() && backRight.atTargetPosition();
+    public void setMotorSpeeds(double forwardPower, double strafePower,
+                                   double rotationPower){
+        forwardPower *= -1;
+        strafePower *= -1;
+        rotationPower *= -1;
 
 
-        while (opModeIsActive()) {
+        double frontLeftSpeed = forwardPower - strafePower - rotationPower;
+        double backLeftSpeed = forwardPower + strafePower - rotationPower;
+        double frontRightSpeed = forwardPower + strafePower + rotationPower;
+        double backRightSpeed = forwardPower - strafePower + rotationPower;
 
-            //when all motors are at target position, stop runningthem
-            motorsAtTargetPosition = frontLeft.atTargetPosition() && frontRight.atTargetPosition() && backLeft.atTargetPosition() && backRight.atTargetPosition();
-            if(motorsAtTargetPosition)
-            {
-                frontLeft.stopMotor();
-                frontRight.stopMotor();
-                backLeft.stopMotor();
-                backRight.stopMotor();
-
-            }
-
-            if(!frontLeft.atTargetPosition()){
-                frontLeft.set(0.5);
-            }
-            else{
-                frontLeft.stopMotor();
-            }
+        //math.max tale 2 doubles and figure out which one is higher
+        // This is used to determine the current max speed as different sides of the robot
+        // may have their motors moving faster
 
 
-            if(!frontRight.atTargetPosition()){
-                frontRight.set(0.5);
-            }
-            else{
-                frontRight.stopMotor();
-            }
+        double max = Math.max(Math.abs(frontLeftSpeed), Math.abs(frontRightSpeed));
 
-            if(!backRight.atTargetPosition()){
-                backRight.set(0.5);
-            }
-            else{
-                backRight.stopMotor();
-            }
+        //first we compare the front motors. then we compare that with the back motors to find
+        // the fastest motor
+        max = Math.max(max, Math.abs(backLeftSpeed));
+        max = Math.max(max, Math.abs(backRightSpeed));
 
 
-            if(!backLeft.atTargetPosition()){
-                backLeft.set(0.5);
-            }
-            else{
-                backLeft.stopMotor();
-            }
-            main_dashboardTelemetry.addData("frontLeft_atPosition", frontLeft.atTargetPosition());
-            main_dashboardTelemetry.addData("frontRight_atPosition", frontRight.atTargetPosition());
-            main_dashboardTelemetry.addData("backLeft_atPosition", backLeft.atTargetPosition());
-            main_dashboardTelemetry.addData("backRight_atPosition", backRight.atTargetPosition());
-
-            main_dashboardTelemetry.addData("frontLeft_Position", frontLeft.getCurrentPosition());
-            main_dashboardTelemetry.addData("frontRight_Position", frontRight.getCurrentPosition());
-            main_dashboardTelemetry.addData("backLeft_Position", backLeft.getCurrentPosition());
-            main_dashboardTelemetry.addData("backRight_Position", backRight.getCurrentPosition());
-
-            main_dashboardTelemetry.addData("motorAtPositon",motorsAtTargetPosition );
-
-            main_dashboardTelemetry.update();
-
+        // if the faster motor at the moment has a power over 1, we divide all motors by the max
+        if (max > 1.0) {
+            frontLeftSpeed /= max;
+            frontRightSpeed /= max;
+            backLeftSpeed /= max;
+            backRightSpeed /= max;
         }
+
+
+        frontLeftDriveMotor.setPower(frontLeftSpeed);
+        frontRightDriveMotor.setPower(frontLeftSpeed);
+        backLeftDriveMotor.setPower(backLeftSpeed);
+        backRightDriveMotor.setPower(backRightSpeed);
 
 
     }
