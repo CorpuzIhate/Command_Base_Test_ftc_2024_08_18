@@ -1,17 +1,22 @@
 package org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.auto;
 
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 @Autonomous(name = "Command Auto")
 public class basicAutoOpMode extends LinearOpMode {
 
-
+    FtcDashboard dashboard;
+    Telemetry main_dashboardTelemetry;
     private BNO055IMU imu;
 
 
@@ -26,10 +31,12 @@ public class basicAutoOpMode extends LinearOpMode {
 
     public GamepadEx driverOP;
     public double dpp = (3 * Math.PI) / 560;
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
-
+        waitForStart();
+        runtime.reset();
 
         // the current position of the motor
 
@@ -74,16 +81,33 @@ public class basicAutoOpMode extends LinearOpMode {
         backRight.set(0);
         backLeft.set(0);
 
+        frontLeft.resetEncoder();
+        frontRight.resetEncoder();
+        backRight.resetEncoder();
+        backLeft.resetEncoder();
+
+
+
+        dashboard = FtcDashboard.getInstance();
+        main_dashboardTelemetry = dashboard.getTelemetry();
+
 
 
         boolean motorsAtTargetPosition = frontLeft.atTargetPosition() && frontRight.atTargetPosition() && backLeft.atTargetPosition() && backRight.atTargetPosition();
 
 
-        while(!motorsAtTargetPosition){
+        while (opModeIsActive()) {
 
             //when all motors are at target position, stop runningthem
             motorsAtTargetPosition = frontLeft.atTargetPosition() && frontRight.atTargetPosition() && backLeft.atTargetPosition() && backRight.atTargetPosition();
+            if(motorsAtTargetPosition)
+            {
+                frontLeft.stopMotor();
+                frontRight.stopMotor();
+                backLeft.stopMotor();
+                backRight.stopMotor();
 
+            }
 
             if(!frontLeft.atTargetPosition()){
                 frontLeft.set(0.5);
@@ -114,12 +138,22 @@ public class basicAutoOpMode extends LinearOpMode {
             else{
                 backLeft.stopMotor();
             }
+            main_dashboardTelemetry.addData("frontLeft_atPosition", frontLeft.atTargetPosition());
+            main_dashboardTelemetry.addData("frontRight_atPosition", frontRight.atTargetPosition());
+            main_dashboardTelemetry.addData("backLeft_atPosition", backLeft.atTargetPosition());
+            main_dashboardTelemetry.addData("backRight_atPosition", backRight.atTargetPosition());
+
+            main_dashboardTelemetry.addData("frontLeft_Position", frontLeft.getCurrentPosition());
+            main_dashboardTelemetry.addData("frontRight_Position", frontRight.getCurrentPosition());
+            main_dashboardTelemetry.addData("backLeft_Position", backLeft.getCurrentPosition());
+            main_dashboardTelemetry.addData("backRight_Position", backRight.getCurrentPosition());
+
+            main_dashboardTelemetry.addData("motorAtPositon",motorsAtTargetPosition );
+
+            main_dashboardTelemetry.update();
 
         }
-        frontLeft.stopMotor();
-        frontRight.stopMotor();
-        backRight.stopMotor();
-        backLeft.stopMotor();
+
 
     }
 }
