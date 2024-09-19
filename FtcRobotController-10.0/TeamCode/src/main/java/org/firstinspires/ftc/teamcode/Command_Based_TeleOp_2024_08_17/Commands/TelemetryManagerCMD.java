@@ -17,7 +17,6 @@ public class TelemetryManagerCMD extends CommandBase {
         //delete ftc dashboard during competition to prevent errors.
         //FTC Dashboard is PROHIBITED during games but allowed during pits
 
-    }
     @Override
     public void execute(){
         m_TelemetryManagerSubsystem.getTelemetryObject().update();

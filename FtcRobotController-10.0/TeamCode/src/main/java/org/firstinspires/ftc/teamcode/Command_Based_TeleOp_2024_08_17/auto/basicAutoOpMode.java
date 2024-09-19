@@ -1,20 +1,11 @@
 package org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.auto;
 
 
-import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.PerpetualCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Commands.TeleOpJoystickRobotCentricCMD;
-import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Commands.TelemetryManagerCMD;
-import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Subsystems.MecanumDriveBaseSubsystem;
-import org.firstinspires.ftc.teamcode.Command_Based_TeleOp_2024_08_17.Subsystems.TelemetryManagerSubsystem;
 
 
 @Autonomous(name = "Command Auto")
@@ -82,14 +73,47 @@ public class basicAutoOpMode extends LinearOpMode {
         frontRight.set(0);
         backRight.set(0);
         backLeft.set(0);
-        while(!frontLeft.atTargetPosition() ){
-            frontLeft.set(0.5);
-            frontRight.set(0.5);
-            backRight.set(-0.5);
-            backLeft.set(-0.5);
 
 
 
+        boolean motorsAtTargetPosition = frontLeft.atTargetPosition() && frontRight.atTargetPosition() && backLeft.atTargetPosition() && backRight.atTargetPosition();
+
+
+        while(!motorsAtTargetPosition){
+
+            //when all motors are at target position, stop runningthem
+            motorsAtTargetPosition = frontLeft.atTargetPosition() && frontRight.atTargetPosition() && backLeft.atTargetPosition() && backRight.atTargetPosition();
+
+
+            if(!frontLeft.atTargetPosition()){
+                frontLeft.set(0.5);
+            }
+            else{
+                frontLeft.stopMotor();
+            }
+
+
+            if(!frontRight.atTargetPosition()){
+                frontRight.set(0.5);
+            }
+            else{
+                frontRight.stopMotor();
+            }
+
+            if(!backRight.atTargetPosition()){
+                backRight.set(0.5);
+            }
+            else{
+                backRight.stopMotor();
+            }
+
+
+            if(!backLeft.atTargetPosition()){
+                backLeft.set(0.5);
+            }
+            else{
+                backLeft.stopMotor();
+            }
 
         }
         frontLeft.stopMotor();
