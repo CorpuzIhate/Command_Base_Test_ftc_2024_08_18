@@ -22,7 +22,7 @@ public class MecanumDriveBaseSubsystem extends SubsystemBase {
     public double[] setMotorSpeeds(double forwardPower, double strafePower,
                                   double rotationPower){
         double[] motorSpeeds = new double[4];
-        forwardPower *= -1;
+        forwardPower *= 1;
         strafePower *= -1;
         rotationPower *= -1;
         
