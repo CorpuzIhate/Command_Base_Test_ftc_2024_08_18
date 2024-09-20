@@ -34,48 +34,75 @@ public class basicAutoOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        waitForStart();
+
         frontLeftDriveMotor = hardwareMap.get(DcMotor.class, "front_left");
         frontRightDriveMotor = hardwareMap.get(DcMotor.class, "front_right");
         backLeftDriveMotor = hardwareMap.get(DcMotor.class, "back_left");
         backRightDriveMotor = hardwareMap.get(DcMotor.class, "back_right");
 
         //TODO check if you need to reverse the motors
+
         backLeftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        waitForStart();
 
 
-        driveForwardDistance(1,100); // distance doesnt work anymore
-    }
-
-    private void driveForwardDistance(double power, double distanceMeters) {
 
         frontLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        ticksToDist = metersToEncoderTicks(distanceMeters, 560, WHEEL_CIRCUMFERENCE_METERS);
-        frontLeftDriveMotor.setTargetPosition(1200);
-        frontRightDriveMotor.setTargetPosition(1200);
-        backLeftDriveMotor.setTargetPosition(1200);
-        backRightDriveMotor.setTargetPosition(1200);
+        frontLeftDriveMotor.setTargetPosition(12000);
+        frontRightDriveMotor.setTargetPosition(12000);
+        backLeftDriveMotor.setTargetPosition(12000);
+        backRightDriveMotor.setTargetPosition(12000);
 
 
         frontLeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontRightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        setMotorSpeeds(power, 0, 0);
-//        while(opModeIsActive()){
-//            main_dashboardTelemetry.addData("Front_left_pos", frontLeftDriveMotor.getCurrentPosition());
-//            main_dashboardTelemetry.addData("Front_right_pos", frontRightDriveMotor.getCurrentPosition());
-//            main_dashboardTelemetry.addData("back_left_pos", backLeftDriveMotor.getCurrentPosition());
-//            main_dashboardTelemetry.addData("back_right_pos", backRightDriveMotor.getCurrentPosition());
-//        }
+
+
+
+        frontLeftDriveMotor.setPower( 0.5);
+        frontRightDriveMotor.setPower(0.5);
+        backRightDriveMotor.setPower(0.5);
+        backLeftDriveMotor.setPower(0.5);
+
+
+
+
 
 
     }
+
+
+
+    private void driveForwardDistance(double power, double distanceMeters) {//test me
+
+        frontLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+
+        frontLeftDriveMotor.setTargetPosition(1200);
+
+
+
+        frontLeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        frontLeftDriveMotor.setPower(0.3);
+        while(frontLeftDriveMotor.isBusy() && opModeIsActive()){
+           main_dashboardTelemetry.addData("Front_left_pos", frontLeftDriveMotor.getCurrentPosition());
+
+        }
+
+
+    }
+
+
+
 
     private int metersToEncoderTicks(double distMeters, int ticksToRotation, double wheelCircumferenceMeters) {
         double numRevolutions = distMeters / wheelCircumferenceMeters;
