@@ -25,9 +25,9 @@ public class basicAutoOpMode extends LinearOpMode {
     double rotationPwr;
 
     private Motor frontLeft;
-    Motor frontRight;
-    Motor backLeft;
-    Motor backRight;
+    private Motor frontRight;
+    private Motor backLeft;
+    private Motor backRight;
 
     public GamepadEx driverOP;
     public double dpp = (3 * Math.PI) / 560;
